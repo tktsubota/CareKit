@@ -63,6 +63,11 @@ OCK_CLASS_AVAILABLE
 
 - (instancetype)init NS_UNAVAILABLE;
 
+- (instancetype)initWithStartDate:(NSDateComponents *)startDate
+                          endDate:(nullable NSDateComponents *)endDate
+                      occurrences:(NSArray<NSNumber *> *)occurrences
+                  timeUnitsToSkip:(NSUInteger)timeUnitsToSkip;
+
 /**
  Defines a schedule that has the same number of occurrences each day.
  
