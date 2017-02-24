@@ -81,7 +81,7 @@
 }
 
 - (instancetype)initWithStartDate:(NSDateComponents *)startDate
-                          endDate:(NSDateComponents *)endDate
+                          endDate:(nullable NSDateComponents *)endDate
                       occurrences:(NSArray<NSNumber *> *)occurrences
                   timeUnitsToSkip:(NSUInteger)timeUnitsToSkip {
     

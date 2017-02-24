@@ -165,6 +165,7 @@ OCK_CLASS_AVAILABLE
  */
 @property (nonatomic, readonly) NSUInteger timeUnitsToSkip;
 
+- (NSUInteger)numberOfDaySinceStart:(NSDateComponents *)day;
 
 /**
  How many events (occurrences) on a date.
