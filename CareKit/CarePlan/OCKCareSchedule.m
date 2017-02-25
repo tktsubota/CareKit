@@ -157,6 +157,19 @@
     OCKThrowMethodUnavailableException();
 }
 
+- (NSUInteger)filteredTimesForArray:(NSArray<NSDateComponents *> *)times
+                             onDate:(NSDateComponents *)filterDate {
+    NSMutableArray<NSDateComponents *> *filteredTimes = [times mutableCopy];
+    for (NSDateComponents *time in filteredTimes) {
+        NSDate *doseTimeDate = [[self UTC_calendar] dateFromComponents:[filterDate combineWith:time]];
+        NSDate *startTimeDate = [[self UTC_calendar] dateFromComponents:self.startTime];
+        if ([doseTimeDate timeIntervalSinceDate:startTimeDate] < 0) {
+            [filteredTimes removeObject:time];
+        }
+    }
+    return filteredTimes.count;
+}
+
 - (NSUInteger)numberOfDaySinceStart:(NSDateComponents *)day {
     
     NSCalendar *calendar = [self UTC_calendar];
@@ -172,7 +185,7 @@
     return daysSinceStart;
 }
 
--(void)setEndTime:(NSDateComponents *)endTime {
+- (void)setEndTime:(NSDateComponents *)endTime {
     NSAssert(![_startTime isLaterThan:endTime], @"startTime should be earlier than endTime. %@ %@", _startTime, endTime);
     _endTime = endTime;
 }
@@ -183,6 +196,14 @@
 
 - (OCKCareScheduleType)type {
     return OCKCareScheduleTypeOther;
+}
+
+- (NSDateComponents *)startDate {
+    return [self.startTime validatedDateComponents];
+}
+
+- (NSDateComponents *)endDate {
+    return [self.endTime validatedDateComponents];
 }
 
 @end
@@ -207,29 +228,13 @@
     if ([self isDateInRange:day]) {
         NSUInteger occurrencesPerDay = self.times.firstObject.count;
         NSUInteger daysSinceStart = [self numberOfDaySinceStart:day];
-        occurrences = ((daysSinceStart % (self.timeUnitsToSkip + 1)) == 0) ? occurrencesPerDay : 0;
-        if ([[self.startTime validatedDateComponents] isEqualToDate:day]) {
-            NSMutableArray<NSDateComponents *> *filteredTimes = [self.times.firstObject mutableCopy];
-            for (NSDateComponents *time in filteredTimes) {
-                NSDate *doseTimeDate = [[self UTC_calendar] dateFromComponents:[[self.startTime validatedDateComponents] combineWith:time]];
-                NSDate *startDate = [[self UTC_calendar] dateFromComponents:self.startTime];
-                if ([doseTimeDate timeIntervalSinceDate:startDate] < 0) {
-                    [filteredTimes removeObject:time];
-                }
-            }
-            occurrences = filteredTimes.count;
-        } else if ([[self.endTime validatedDateComponents] isEqualToDate:day]) {
-            NSMutableArray<NSDateComponents *> *filteredTimes = [self.times.firstObject mutableCopy];
-            for (NSDateComponents *time in filteredTimes) {
-                NSDate *doseTimeDate = [[self UTC_calendar] dateFromComponents:[[self.endTime validatedDateComponents] combineWith:time]];
-                NSDate *endDate = [[self UTC_calendar] dateFromComponents:self.endTime];
-                if ([endDate timeIntervalSinceDate:doseTimeDate] < 0) {
-                    [filteredTimes removeObject:time];
-                }
-            }
-            occurrences = filteredTimes.count;
+        bool shouldHaveEvents = (daysSinceStart % (self.timeUnitsToSkip + 1)) == 0;
+        if ([[self startDate] isEqualToDate:day]) {
+            occurrences = [self filteredTimesForArray:self.times.firstObject onDate:[self startDate]];
+        } else if ([[self endDate] isEqualToDate:day] && shouldHaveEvents) {
+            occurrences = [self filteredTimesForArray:self.times.firstObject onDate:[self endDate]];
         } else {
-            occurrences = self.times.count;
+            occurrences = shouldHaveEvents ? occurrencesPerDay : 0;
         }
     }
     return occurrences;
@@ -272,28 +277,13 @@
         NSUInteger weeksSinceStart = endWeek - startWeek;
         NSUInteger weekday = [calendar component:NSCalendarUnitWeekday fromDate:[day UTC_dateWithGregorianCalendar]];
         
-        if ([[self.startTime validatedDateComponents] isEqualToDate:day]) {
-            NSMutableArray<NSDateComponents *> *filteredTimes = [self.times[weekday-1] mutableCopy];
-            for (NSDateComponents *time in filteredTimes) {
-                NSDate *doseTimeDate = [[self UTC_calendar] dateFromComponents:[[self.startTime validatedDateComponents] combineWith:time]];
-                NSDate *startDate = [[self UTC_calendar] dateFromComponents:self.startTime];
-                if ([doseTimeDate timeIntervalSinceDate:startDate] < 0) {
-                    [filteredTimes removeObject:time];
-                }
-            }
-            occurrences = filteredTimes.count;
-        } else if ([[self.endTime validatedDateComponents] isEqualToDate:day]) {
-            NSMutableArray<NSDateComponents *> *filteredTimes = [self.times[weekday-1] mutableCopy];
-            for (NSDateComponents *time in filteredTimes) {
-                NSDate *doseTimeDate = [[self UTC_calendar] dateFromComponents:[[self.endTime validatedDateComponents] combineWith:time]];
-                NSDate *endDate = [[self UTC_calendar] dateFromComponents:self.endTime];
-                if ([endDate timeIntervalSinceDate:doseTimeDate] < 0) {
-                    [filteredTimes removeObject:time];
-                }
-            }
-            occurrences = filteredTimes.count;
+        bool shouldHaveEvents = (weeksSinceStart % (self.timeUnitsToSkip + 1)) == 0;
+        if ([[self startDate] isEqualToDate:day]) {
+            occurrences = [self filteredTimesForArray:self.times[weekday-1] onDate:[self startDate]];
+        } else if ([[self.endTime validatedDateComponents] isEqualToDate:day] && shouldHaveEvents) {
+            occurrences = [self filteredTimesForArray:self.times[weekday-1] onDate:[self endDate]];
         } else {
-            occurrences = ((weeksSinceStart % (self.timeUnitsToSkip + 1)) == 0) ? self.times[weekday-1].count : 0;
+            occurrences = shouldHaveEvents ? self.times[weekday-1].count : 0;
         }
     }
     return occurrences;

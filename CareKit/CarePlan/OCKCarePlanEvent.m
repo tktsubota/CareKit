@@ -66,7 +66,7 @@
 }
 
 - (NSDateComponents *)date {
-    return [self.activity.schedule.startDate dateCompByAddingDays:self.numberOfDaysSinceStart];
+    return [[self.activity.schedule.startTime validatedDateComponents] dateCompByAddingDays:self.numberOfDaysSinceStart];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
