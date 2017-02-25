@@ -235,7 +235,7 @@ insertIntoManagedObjectContext:(NSManagedObjectContext *)context
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"OCKCDCarePlanActivity %@ %@", ((OCKCareSchedule *)self.schedule).endDate, self.schedule];
+    return [NSString stringWithFormat:@"OCKCDCarePlanActivity %@ %@", ((OCKCareSchedule *)self.schedule).endTime, self.schedule];
 }
 
 @dynamic color;

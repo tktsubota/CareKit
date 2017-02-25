@@ -488,7 +488,7 @@ static NSString * const OCKAttributeNameDayIndex = @"numberOfDaysSinceStart";
     }];
 }
 
-- (void)setEndDate:(NSDateComponents *)day
+- (void)setEndTime:(NSDateComponents *)endTime
       forActivity:(OCKCarePlanActivity *)activity
        completion:(void (^)(BOOL success, OCKCarePlanActivity *activity, NSError *error))completion {
     
@@ -513,7 +513,7 @@ static NSString * const OCKAttributeNameDayIndex = @"numberOfDaysSinceStart";
                                                    opBlock:^BOOL(NSManagedObject *cdObject, NSManagedObjectContext *context) {
                                                        OCKCDCarePlanActivity *cdActivity = (OCKCDCarePlanActivity *)cdObject;
                                                        OCKCareSchedule *schedule = [cdActivity.schedule copy];
-                                                       schedule.endDate = day;
+                                                       schedule.endTime = endTime;
                                                        cdActivity.schedule = schedule;
                                                        return YES;
                                                    } error:&errorOut];

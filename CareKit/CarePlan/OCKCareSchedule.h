@@ -63,72 +63,67 @@ OCK_CLASS_AVAILABLE
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithStartDate:(NSDateComponents *)startDate
-                          endDate:(nullable NSDateComponents *)endDate
-                      occurrences:(NSArray<NSNumber *> *)occurrences
-                  timeUnitsToSkip:(NSUInteger)timeUnitsToSkip;
-
 /**
- Defines a schedule that has the same number of occurrences each day.
+ Defines a schedule that has the same times for doses each day.
  
  You can set the end date later by using the CarePlanStore API.
  
- @param startDate           Start date for a schedule, using the Gregorian calendar.
- @param occurrencesPerDay   Number of occurrences in each day.
+ @param startTime           Start time for a schedule, using the Gregorian calendar.
+ @param times               Times for doses each day.
  
  @return    An OCKCareSchedule instance.
  */
-+ (instancetype)dailyScheduleWithStartDate:(NSDateComponents *)startDate
-                         occurrencesPerDay:(NSUInteger)occurrencesPerDay;
++ (instancetype)dailyScheduleWithStartTime:(NSDateComponents *)startTime
+                                     times:(NSArray<NSDateComponents *> *)times;
 
 /**
  Defines a schedule that repeats every week.
  
- Each weekday can have a different number of occurrences.
+ Each weekday can have a different set of dose times.
  You can set the end date later by using the CarePlanStore API.
  
- @param startDate                       Start date for a schedule, using the Gregorian calendar.
- @param occurrencesFromSundayToSaturday Number of occurrences for Sunday through Saturday.
+ @param startTime                       Start time for a schedule, using the Gregorian calendar.
+ @param timesFromSundayToSaturday       Times for dose from Sunday through Saturday.
  
  @return    An OCKCareSchedule instance.
  */
-+ (instancetype)weeklyScheduleWithStartDate:(NSDateComponents *)startDate
-                       occurrencesOnEachDay:(NSArray<NSNumber *> *)occurrencesFromSundayToSaturday;
++ (instancetype)weeklyScheduleWithStartTime:(NSDateComponents *)startTime
+                             timesOnEachDay:(NSArray<NSArray<NSDateComponents *> *> *)timesFromSundayToSaturday;
 
 /**
- Defines a schedule that has the same number of occurrences every day.
+ Defines a schedule that has the same times for doses every day.
  
- @param startDate           Start date for a schedule, using the Gregorian calendar.
- @param occurrencesPerDay   Number of occurrences in each day.
+ @param startTime           Start time for a schedule, using the Gregorian calendar.
+ @param times               Times for doses each day.
  @param daysToSkip          Number of days between two active days during this period for which the schedule has no occurrence. 
                             (That is, number of skipped days.)
                             First day of a schedule is recognized as an active day.
- @param endDate             End date for a schedule, , using the Gregorian calendar.
+ @param endTime             End time for a schedule, using the Gregorian calendar.
  
  @return    An OCKCareSchedule instance.
  */
-+ (instancetype)dailyScheduleWithStartDate:(NSDateComponents *)startDate
-                         occurrencesPerDay:(NSUInteger)occurrencesPerDay
++ (instancetype)dailyScheduleWithStartTime:(NSDateComponents *)startTime
+                                     times:(NSArray<NSDateComponents *> *)times
                                 daysToSkip:(NSUInteger)daysToSkip
-                                   endDate:(nullable NSDateComponents *)endDate;
+                                   endTime:(nullable NSDateComponents *)endTime;
 
 /**
  Defines a schedule that repeats every week.
  
  Each weekday can have a different number of occurrences.
  
- @param startDate                       Start date for a schedule, using the Gregorian calendar.
- @param occurrencesFromSundayToSaturday Number of occurrences in each day.
+ @param startTime                       Start time for a schedule, using the Gregorian calendar.
+ @param timesOnEachDay                  Times for doses from Sunday to Saturday.
  @param weeksToSkip                     Number of weeks between two active weeks during this period for which the schedule has no occurrence.
                                         (That is, number of skipped weeks.)
- @param endDate                         End date for a schedule, , using the Gregorian calendar.
+ @param endTime                         End time for a schedule, using the Gregorian calendar.
  
  @return    An OCKCareSchedule instance.
  */
-+ (instancetype)weeklyScheduleWithStartDate:(NSDateComponents *)startDate
-                       occurrencesOnEachDay:(NSArray<NSNumber *> *)occurrencesFromSundayToSaturday
++ (instancetype)weeklyScheduleWithStartTime:(NSDateComponents *)startTime
+                             timesOnEachDay:(NSArray<NSArray<NSDateComponents *> *> *)timesFromSundayToSaturday
                                 weeksToSkip:(NSUInteger)weeksToSkip
-                                    endDate:(nullable NSDateComponents *)endDate;
+                                    endTime:(nullable NSDateComponents *)endTime;
 
 /**
  Type of schedule.
@@ -136,30 +131,28 @@ OCK_CLASS_AVAILABLE
 @property (nonatomic, readonly) OCKCareScheduleType type;
 
 /**
- Start date of schedule.
+ Start time of schedule.
  
  Gregorian calendar representation of a date.
- Only Era/Year/Month/Day attributes are observed.
  Date components in another calendar must be converted to the Gregorian calendar before using in an OCKCareSchedule object.
  */
-@property (nonatomic, readonly) NSDateComponents *startDate;
+@property (nonatomic, readonly) NSDateComponents *startTime;
 
 /**
- End date of schedule.
+ End time of schedule.
  
  Gregorian calendar representation of a date.
- Only Era/Year/Month/Day attributes are observed.
  Date components in another calendar must be converted to the Gregorian calendar before using in an OCKCareSchedule object.
  */
-@property (nonatomic, readonly, nullable) NSDateComponents *endDate;
+@property (nonatomic, readonly, nullable) NSDateComponents *endTime;
 
 /**
- How many occurrences in each day within the time range.
+ Times for events for each day in a schedule.
  
- Daily schedule has only one number in array.
- Weekly schedule has 7 numbers mapping from Sunday to Saturday.
+ Daily schedule has only array of dates.
+ Weekly schedule has 7 arrays of dates mapping from Sunday to Saturday.
  */
-@property (nonatomic, copy, readonly) NSArray<NSNumber *> *occurrences;
+@property (nonatomic, copy, readonly) NSArray<NSArray<NSDateComponents *> *> *times;
 
 /**
  Number of inactive time units between two active time units.
@@ -169,8 +162,6 @@ OCK_CLASS_AVAILABLE
  For weekly schedule, first week of a schedule is recognized as an active week.
  */
 @property (nonatomic, readonly) NSUInteger timeUnitsToSkip;
-
-- (NSUInteger)numberOfDaySinceStart:(NSDateComponents *)day;
 
 /**
  How many events (occurrences) on a date.

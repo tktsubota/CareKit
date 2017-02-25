@@ -37,9 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OCKCareSchedule ()
 
 // `OCKCareSchedule` subclasses should use this initializer to set instance values.
-- (instancetype)initWithStartDate:(NSDateComponents *)startDate
-                          endDate:(NSDateComponents *)endDate
-                      occurrences:(NSArray<NSNumber *> *)occurrences
+- (instancetype)initWithStartTime:(NSDateComponents *)startTime
+                          endTime:(nullable NSDateComponents *)endTime
+                            times:(NSArray<NSArray<NSDateComponents *> *> *)times
                   timeUnitsToSkip:(NSUInteger)timeUnitsToSkip;
 
 @end

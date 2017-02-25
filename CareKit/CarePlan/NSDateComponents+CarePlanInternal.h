@@ -52,6 +52,8 @@
 
 - (NSDateComponents *)validatedDateComponents;
 
+- (NSDateComponents *)combineWith:(NSDateComponents *)time;
+
 // Return weekday along E/Y/M/D.
 + (NSDateComponents *)ock_componentsWithDate:(NSDate *)date calendar:(NSCalendar *)calendar;
 

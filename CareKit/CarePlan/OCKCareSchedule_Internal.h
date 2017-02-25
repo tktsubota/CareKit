@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCKCareSchedule ()
 
-- (void)setEndDate:(NSDateComponents *)date;
+- (void)setEndTime:(NSDateComponents *)time;
 
 - (NSUInteger)numberOfDaySinceStart:(NSDateComponents *)date;
 
@@ -45,20 +45,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCKCareDailySchedule : OCKCareSchedule
 
-- (instancetype)initWithStartDate:(NSDateComponents *)startDate
+- (instancetype)initWithStartTime:(NSDateComponents *)startTime
                        daysToSkip:(NSUInteger)daysToSkip
-                occurrencesPerDay:(NSUInteger)occurrencesPerDay
-                          endDate:(nullable NSDateComponents *)endDate;
+                            times:(NSArray<NSDateComponents *> *)times
+                          endTime:(nullable NSDateComponents *)endTime;
 
 @end
 
 
 @interface OCKCareWeeklySchedule : OCKCareSchedule
 
-- (instancetype)initWithStartDate:(NSDateComponents *)startDate
+- (instancetype)initWithStartTime:(NSDateComponents *)startTime
                       weeksToSkip:(NSUInteger)weeksToSkip
-             occurrencesOnEachDay:(NSArray<NSNumber *> *)occurrencesFromSundayToSaturday
-                          endDate:(nullable NSDateComponents *)endDate;
+                   timesOnEachDay:(NSArray<NSArray<NSDateComponents *> *> *)timesFromSundayToSaturday
+                          endTime:(nullable NSDateComponents *)endTime;
 
 @end
 

@@ -117,6 +117,19 @@
     return dateComp;
 }
 
+- (NSDateComponents *)combineWith:(NSDateComponents *)time {
+    NSDateComponents *newComps = [[NSDateComponents alloc] init];
+    newComps.timeZone = self.timeZone;
+    newComps.era = self.era;
+    newComps.year = self.year;
+    newComps.month = self.month;
+    newComps.day = self.day;
+    newComps.hour = time.hour;
+    newComps.minute = time.minute;
+    newComps.second = time.second;
+    return newComps;
+}
+
 - (NSCalendar *)UTC_gregorianCalendar {
     static NSCalendar *calendar;
     if (calendar == nil) {

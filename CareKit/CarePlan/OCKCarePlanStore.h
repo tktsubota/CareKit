@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  It stores activities and events.
  
  An activity can be added to, or removed from, a store. 
- Once an activity has been added to a store, only the endDate can be changed by using the  setEndDate:forActivity:completion: method. 
+ Once an activity has been added to a store, only the endTime can be changed by using the  setEndTime:forActivity:completion: method.
  Update the state of an event after the user has responded to it.
  
  You can query the store in the following ways:
@@ -155,14 +155,14 @@ You can use the watch delegate to subscribe a watch app to notifications of chan
                            completion:(void (^)(BOOL success, NSArray<OCKCarePlanActivity *> *activities, NSError * _Nullable error))completion;
 
 /**
- Update the end date of an activity.
- Use this method to change the end date of an activity after it has been added to store.
+ Update the end time of an activity.
+ Use this method to change the end time of an activity after it has been added to store.
  
- @param     endDate         End date for an activity.
+ @param     endTime         End time for an activity.
  @param     activity        Activity object to receive new end date.
  @param     completion      A completion block that returns the result of the operation and the activity that was modified.
  */
-- (void)setEndDate:(NSDateComponents *)endDate
+- (void)setEndTime:(NSDateComponents *)endTime
        forActivity:(OCKCarePlanActivity *)activity
         completion:(void (^)(BOOL success, OCKCarePlanActivity * _Nullable activity, NSError * _Nullable error))completion;
 
