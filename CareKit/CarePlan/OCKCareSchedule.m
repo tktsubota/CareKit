@@ -164,6 +164,19 @@
     OCKThrowMethodUnavailableException();
 }
 
+- (NSUInteger)numberOfEventsBetweenStartAndEndForTimes:(NSArray<NSDateComponents *> *)times {
+    NSMutableArray<NSDateComponents *> *filteredTimes = [times mutableCopy];
+    for (NSDateComponents *time in times) {
+        NSDate *doseTimeDate = [[self UTC_calendar] dateFromComponents:[[self startDate] combineWith:time]];
+        NSDate *startTimeDate = [[self UTC_calendar] dateFromComponents:self.startTime];
+        NSDate *endTimeDate = [[self UTC_calendar] dateFromComponents:self.endTime];
+        if (!([doseTimeDate timeIntervalSinceDate:startTimeDate] >= 0 && [doseTimeDate timeIntervalSinceDate:endTimeDate] <= 0)) {
+            [filteredTimes removeObject:time];
+        }
+    }
+    return filteredTimes.count;
+}
+
 - (NSUInteger)startDateNumberOfEventsForTimes:(NSArray<NSDateComponents *> *)times {
     NSMutableArray<NSDateComponents *> *filteredTimes = [times mutableCopy];
     for (NSDateComponents *time in times) {
@@ -247,7 +260,9 @@
         NSUInteger occurrencesPerDay = self.times.firstObject.count;
         NSUInteger daysSinceStart = [self numberOfDaySinceStart:day];
         bool shouldHaveEvents = (daysSinceStart % (self.timeUnitsToSkip + 1)) == 0;
-        if ([[self startDate] isEqualToDate:day]) {
+        if ([day isEqualToDate:[self startDate]] && [day isEqualToDate:[self endDate]]) {
+            occurrences = [self numberOfEventsBetweenStartAndEndForTimes:self.times.firstObject];
+        } else if ([[self startDate] isEqualToDate:day]) {
             occurrences = [self startDateNumberOfEventsForTimes:self.times.firstObject];
         } else if ([[self endDate] isEqualToDate:day] && shouldHaveEvents) {
             occurrences = [self endDateNumberOfEventsForTimes:self.times.firstObject];
@@ -296,7 +311,9 @@
         NSUInteger weekday = [calendar component:NSCalendarUnitWeekday fromDate:[day UTC_dateWithGregorianCalendar]];
         
         bool shouldHaveEvents = (weeksSinceStart % (self.timeUnitsToSkip + 1)) == 0;
-        if ([[self startDate] isEqualToDate:day]) {
+        if ([day isEqualToDate:[self startDate]] && [day isEqualToDate:[self endDate]]) {
+            occurrences = [self numberOfEventsBetweenStartAndEndForTimes:self.times[weekday-1]];
+        } else if ([[self startDate] isEqualToDate:day]) {
             occurrences = [self startDateNumberOfEventsForTimes:self.times[weekday-1]];
         } else if ([[self.endTime validatedDateComponents] isEqualToDate:day] && shouldHaveEvents) {
             occurrences = [self endDateNumberOfEventsForTimes:self.times[weekday-1]];
