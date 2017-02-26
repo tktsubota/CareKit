@@ -52,6 +52,10 @@
 
 - (NSDateComponents *)validatedDateComponents;
 
+- (NSDateComponents *)validatedStartEndTime;
+
+- (NSDateComponents *)validatedTime;
+
 - (NSDateComponents *)combineWith:(NSDateComponents *)time;
 
 // Return weekday along E/Y/M/D.

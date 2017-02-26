@@ -84,16 +84,24 @@
     
     OCKThrowInvalidArgumentExceptionIfNil(startTime);
     if (endTime) {
-        NSDate *startDate = [[self UTC_calendar] dateFromComponents:startTime];
-        NSDate *endDate = [[self UTC_calendar] dateFromComponents:endTime];
-        NSAssert([endDate timeIntervalSinceDate:startDate] >= 0, @"startDate should be earlier than endDate.");
+        NSDate *startTimeDate = [[self UTC_calendar] dateFromComponents:[startTime validatedStartEndTime]];
+        NSDate *endTimeDate = [[self UTC_calendar] dateFromComponents:[endTime validatedStartEndTime]];
+        NSAssert([endTimeDate timeIntervalSinceDate:startTimeDate] >= 0, @"startTime should be earlier than endTime.");
     }
     
     self = [super init];
     if (self) {
-        _startTime = [startTime copy];
-        _endTime = [endTime copy];
-        _times = [times copy];
+        _startTime = [startTime validatedStartEndTime];
+        _endTime = [endTime validatedStartEndTime];
+        NSMutableArray *validatedTimes = [times mutableCopy];
+        for (NSArray *weekdayTimes in times) {
+            NSMutableArray *validatedWeekdayTimes = [weekdayTimes mutableCopy];
+            for (NSDateComponents *time in weekdayTimes) {
+                [validatedWeekdayTimes addObject:[time validatedTime]];
+            }
+            [validatedTimes addObject:validatedWeekdayTimes];
+        }
+        _times = validatedTimes;
         _timeUnitsToSkip = timeUnitsToSkip;
     }
     return self;
@@ -106,7 +114,6 @@
 - (instancetype)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
-        
         OCK_DECODE_OBJ_CLASS(coder, startTime, NSDateComponents);
         OCK_DECODE_OBJ_CLASS(coder, endTime, NSDateComponents);
         OCK_DECODE_OBJ_ARRAY(coder, times, NSArray);
@@ -160,7 +167,7 @@
 - (NSUInteger)filteredTimesForArray:(NSArray<NSDateComponents *> *)times
                              onDate:(NSDateComponents *)filterDate {
     NSMutableArray<NSDateComponents *> *filteredTimes = [times mutableCopy];
-    for (NSDateComponents *time in filteredTimes) {
+    for (NSDateComponents *time in times) {
         NSDate *doseTimeDate = [[self UTC_calendar] dateFromComponents:[filterDate combineWith:time]];
         NSDate *startTimeDate = [[self UTC_calendar] dateFromComponents:self.startTime];
         if ([doseTimeDate timeIntervalSinceDate:startTimeDate] < 0) {

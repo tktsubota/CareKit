@@ -117,6 +117,41 @@
     return dateComp;
 }
 
+- (NSDateComponents *)validatedStartEndTime {
+    NSDateComponents *dateComp = [NSDateComponents new];
+    dateComp.era = self.era;
+    dateComp.year = self.year;
+    dateComp.month = self.month;
+    dateComp.day = self.day;
+    dateComp.hour = self.hour == NSDateComponentUndefined ? 0 : self.hour;
+    dateComp.minute = self.minute == NSDateComponentUndefined ? 0 : self.minute;
+    dateComp.second = self.second == NSDateComponentUndefined ? 0 : self.second;
+    [dateComp adjustEra];
+    
+    BOOL valid = [dateComp isValidDateInCalendar:[self UTC_gregorianCalendar]];
+    
+    if (valid == NO) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"date components is not valid in Gregorian calendar. \n %@", dateComp] userInfo:@{@"date": dateComp}];
+    }
+    
+    return dateComp;
+}
+
+- (NSDateComponents *)validatedTime {
+    NSDateComponents *dateComp = [NSDateComponents new];
+    dateComp.hour = self.hour;
+    dateComp.minute = self.minute == NSDateComponentUndefined ? 0 : self.minute;
+    dateComp.second = self.second == NSDateComponentUndefined ? 0 : self.second;
+    
+    BOOL valid = dateComp.hour != NSDateComponentUndefined;
+    
+    if (valid == NO) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"time is not valid. \n %@", dateComp] userInfo:@{@"date": dateComp}];
+    }
+    
+    return dateComp;
+}
+
 - (NSDateComponents *)combineWith:(NSDateComponents *)time {
     NSDateComponents *newComps = [[NSDateComponents alloc] init];
     newComps.timeZone = self.timeZone;
