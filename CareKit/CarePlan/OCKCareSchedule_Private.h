@@ -40,7 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithStartTime:(NSDateComponents *)startTime
                           endTime:(nullable NSDateComponents *)endTime
                             times:(NSArray<NSArray<NSDateComponents *> *> *)times
-                  timeUnitsToSkip:(NSUInteger)timeUnitsToSkip;
+                  timeUnitsToSkip:(NSUInteger)timeUnitsToSkip
+                         userInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo;
 
 @end
 

@@ -105,7 +105,8 @@ OCK_CLASS_AVAILABLE
 + (instancetype)dailyScheduleWithStartTime:(NSDateComponents *)startTime
                                      times:(NSArray<NSDateComponents *> *)times
                                 daysToSkip:(NSUInteger)daysToSkip
-                                   endTime:(nullable NSDateComponents *)endTime;
+                                   endTime:(nullable NSDateComponents *)endTime
+                                  userInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo;
 
 /**
  Defines a schedule that repeats every week.
@@ -123,7 +124,8 @@ OCK_CLASS_AVAILABLE
 + (instancetype)weeklyScheduleWithStartTime:(NSDateComponents *)startTime
                              timesOnEachDay:(NSArray<NSArray<NSDateComponents *> *> *)timesFromSundayToSaturday
                                 weeksToSkip:(NSUInteger)weeksToSkip
-                                    endTime:(nullable NSDateComponents *)endTime;
+                                    endTime:(nullable NSDateComponents *)endTime
+                                   userInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo;
 
 /**
  Type of schedule.

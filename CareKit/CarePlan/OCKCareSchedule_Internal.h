@@ -48,7 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithStartTime:(NSDateComponents *)startTime
                        daysToSkip:(NSUInteger)daysToSkip
                             times:(NSArray<NSDateComponents *> *)times
-                          endTime:(nullable NSDateComponents *)endTime;
+                          endTime:(nullable NSDateComponents *)endTime
+                         userInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo;
 
 @end
 
@@ -58,7 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithStartTime:(NSDateComponents *)startTime
                       weeksToSkip:(NSUInteger)weeksToSkip
                    timesOnEachDay:(NSArray<NSArray<NSDateComponents *> *> *)timesFromSundayToSaturday
-                          endTime:(nullable NSDateComponents *)endTime;
+                          endTime:(nullable NSDateComponents *)endTime
+                         userInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo;
 
 @end
 

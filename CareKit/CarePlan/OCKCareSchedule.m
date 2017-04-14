@@ -49,7 +49,8 @@
     return [[OCKCareDailySchedule alloc] initWithStartTime:startTime
                                                daysToSkip:0
                                                      times:times
-                                                   endTime:nil];
+                                                   endTime:nil
+                                                  userInfo:nil];
 }
 
 + (instancetype)weeklyScheduleWithStartTime:(NSDateComponents *)startTime
@@ -57,30 +58,39 @@
     return [[OCKCareWeeklySchedule alloc] initWithStartTime:startTime
                                                 weeksToSkip:0
                                              timesOnEachDay:timesFromSundayToSaturday
-                                                    endTime:nil];
+                                                    endTime:nil
+                                                   userInfo:nil];
 }
 
 + (instancetype)dailyScheduleWithStartTime:(NSDateComponents *)startTime
                                      times:(NSArray <NSDateComponents *>*)times
                                 daysToSkip:(NSUInteger)daysToSkip
-                                   endTime:(nullable NSDateComponents *)endTime {
-    return [[OCKCareDailySchedule alloc] initWithStartTime:startTime daysToSkip:daysToSkip times:times endTime:endTime];
+                                   endTime:(nullable NSDateComponents *)endTime
+                                  userInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo {
+    return [[OCKCareDailySchedule alloc] initWithStartTime:startTime
+                                                daysToSkip:daysToSkip
+                                                     times:times
+                                                   endTime:endTime
+                                                  userInfo:userInfo];
 }
 
 + (instancetype)weeklyScheduleWithStartTime:(NSDateComponents *)startTime
                              timesOnEachDay:(NSArray<NSArray <NSDateComponents *> *> *)timesFromSundayToSaturday
                                 weeksToSkip:(NSUInteger)weeksToSkip
-                                    endTime:(nullable NSDateComponents *)endTime {
+                                    endTime:(nullable NSDateComponents *)endTime
+                                   userInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo {
     return [[OCKCareWeeklySchedule alloc] initWithStartTime:startTime
                                                 weeksToSkip:weeksToSkip
                                              timesOnEachDay:timesFromSundayToSaturday
-                                                    endTime:endTime];
+                                                    endTime:endTime
+                                                   userInfo:userInfo];
 }
 
 - (instancetype)initWithStartTime:(NSDateComponents *)startTime
                           endTime:(NSDateComponents *)endTime
                             times:(NSArray<NSArray<NSDateComponents *> *> *)times
-                  timeUnitsToSkip:(NSUInteger)timeUnitsToSkip {
+                  timeUnitsToSkip:(NSUInteger)timeUnitsToSkip
+                         userInfo:(NSDictionary<NSString *, id<NSCoding>> *)userInfo {
     
     OCKThrowInvalidArgumentExceptionIfNil(startTime);
     if (endTime) {
@@ -103,6 +113,7 @@
         }
         _times = validatedTimes;
         _timeUnitsToSkip = timeUnitsToSkip;
+        _userInfo = userInfo;
     }
     return self;
 }
@@ -118,6 +129,7 @@
         OCK_DECODE_OBJ_CLASS(coder, endTime, NSDateComponents);
         OCK_DECODE_OBJ_ARRAY(coder, times, NSArray);
         OCK_DECODE_INTEGER(coder, timeUnitsToSkip);
+        OCK_DECODE_OBJ_MUTABLE_DICTIONARY(coder, userInfo, NSString, NSObject);
     }
     return self;
 }
@@ -127,6 +139,7 @@
     OCK_ENCODE_OBJ(coder, endTime);
     OCK_ENCODE_OBJ(coder, times);
     OCK_ENCODE_INTEGER(coder, timeUnitsToSkip);
+    OCK_ENCODE_OBJ(coder, userInfo);
 }
 
 - (BOOL)isEqual:(id)object {
@@ -137,11 +150,12 @@
             OCKEqualObjects(self.startTime, castObject.startTime) &&
             OCKEqualObjects(self.endTime, castObject.endTime) &&
             OCKEqualObjects(self.times, castObject.times) &&
-            (self.timeUnitsToSkip == castObject.timeUnitsToSkip));
+            (self.timeUnitsToSkip == castObject.timeUnitsToSkip)) &&
+            OCKEqualObjects(self.userInfo, castObject.userInfo);
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    OCKCareSchedule *schedule = [[[self class] alloc] initWithStartTime:self.startTime endTime:self.endTime times:self.times timeUnitsToSkip:self.timeUnitsToSkip];
+    OCKCareSchedule *schedule = [[[self class] alloc] initWithStartTime:self.startTime endTime:self.endTime times:self.times timeUnitsToSkip:self.timeUnitsToSkip userInfo:self.userInfo];
     return schedule;
 }
 
@@ -249,8 +263,9 @@
 - (instancetype)initWithStartTime:(NSDateComponents *)startTime
                        daysToSkip:(NSUInteger)daysToSkip
                             times:(NSArray<NSDateComponents *> *)times
-                          endTime:(nullable NSDateComponents *)endTime {
-    self = [self initWithStartTime:startTime endTime:endTime times: @[times] timeUnitsToSkip:daysToSkip];
+                          endTime:(nullable NSDateComponents *)endTime
+                         userInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo {
+    self = [self initWithStartTime:startTime endTime:endTime times: @[times] timeUnitsToSkip:daysToSkip userInfo:userInfo];
     return self;
 }
 
@@ -285,12 +300,14 @@
 - (instancetype)initWithStartTime:(NSDateComponents *)startTime
                       weeksToSkip:(NSUInteger)weeksToSkip
                    timesOnEachDay:(NSArray<NSArray <NSDateComponents *> *> *)timesFromSundayToSaturday
-                          endTime:(nullable NSDateComponents *)endTime {
+                          endTime:(NSDateComponents *)endTime
+                         userInfo:(NSDictionary<NSString *, id<NSCoding>> *)userInfo {
     
     OCKThrowInvalidArgumentExceptionIfNil(timesFromSundayToSaturday);
     NSParameterAssert(timesFromSundayToSaturday.count == 7);
     
-    self = [self initWithStartTime:startTime endTime:endTime times:timesFromSundayToSaturday timeUnitsToSkip:weeksToSkip];
+    self = [self initWithStartTime:startTime endTime:endTime times:timesFromSundayToSaturday timeUnitsToSkip:weeksToSkip userInfo:userInfo];
+    
     return self;
 }
 
