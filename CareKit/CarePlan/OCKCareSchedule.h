@@ -99,6 +99,7 @@ OCK_CLASS_AVAILABLE
                             (That is, number of skipped days.)
                             First day of a schedule is recognized as an active day.
  @param endTime             End time for a schedule, using the Gregorian calendar.
+ @param userInfo            Save any additional objects that comply with the NSCoding protocol.
  
  @return    An OCKCareSchedule instance.
  */
@@ -114,10 +115,11 @@ OCK_CLASS_AVAILABLE
  Each weekday can have a different number of occurrences.
  
  @param startTime                       Start time for a schedule, using the Gregorian calendar.
- @param timesOnEachDay                  Times for doses from Sunday to Saturday.
+ @param timesFromSundayToSaturday       Times for doses from Sunday to Saturday.
  @param weeksToSkip                     Number of weeks between two active weeks during this period for which the schedule has no occurrence.
                                         (That is, number of skipped weeks.)
  @param endTime                         End time for a schedule, using the Gregorian calendar.
+ @param userInfo            Save any additional objects that comply with the NSCoding protocol.
  
  @return    An OCKCareSchedule instance.
  */
