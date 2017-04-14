@@ -164,6 +164,12 @@ OCK_CLASS_AVAILABLE
 @property (nonatomic, readonly) NSUInteger timeUnitsToSkip;
 
 /**
+ Save any additional objects that comply with the NSCoding protocol.
+ */
+@property (nonatomic, copy, readonly, nullable) NSDictionary<NSString *, id<NSCoding>> *userInfo;
+
+
+/**
  How many events (occurrences) on a date.
  
  @param date        Gregorian calendar representation of a date.
