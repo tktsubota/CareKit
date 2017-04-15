@@ -103,9 +103,9 @@
     if (self) {
         _startTime = [startTime validatedStartEndTime];
         _endTime = [endTime validatedStartEndTime];
-        NSMutableArray *validatedTimes = [times mutableCopy];
+        NSMutableArray *validatedTimes = [NSMutableArray array];
         for (NSArray *weekdayTimes in times) {
-            NSMutableArray *validatedWeekdayTimes = [weekdayTimes mutableCopy];
+            NSMutableArray *validatedWeekdayTimes = [NSMutableArray array];
             for (NSDateComponents *time in weekdayTimes) {
                 [validatedWeekdayTimes addObject:[time validatedTime]];
             }
