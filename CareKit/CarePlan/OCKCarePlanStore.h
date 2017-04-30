@@ -162,7 +162,7 @@ You can use the watch delegate to subscribe a watch app to notifications of chan
  @param     activity        Activity object to receive new end date.
  @param     completion      A completion block that returns the result of the operation and the activity that was modified.
  */
-- (void)setEndTime:(NSDateComponents *)endTime
+- (void)setEndTime:(nullable NSDateComponents *)endTime
        forActivity:(OCKCarePlanActivity *)activity
         completion:(void (^)(BOOL success, OCKCarePlanActivity * _Nullable activity, NSError * _Nullable error))completion;
 
