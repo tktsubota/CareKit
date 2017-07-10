@@ -532,6 +532,48 @@ static NSString * const OCKAttributeNameDayIndex = @"numberOfDaysSinceStart";
     }];
 }
 
+- (void)setUserInfo:(NSDictionary<NSString *, id<NSCoding>> *)userInfo
+        forActivity:(OCKCarePlanActivity *)activity
+         completion:(void (^)(BOOL success, OCKCarePlanActivity *activity, NSError *error))completion {
+    
+    OCKThrowInvalidArgumentExceptionIfNil(activity);
+    
+    NSError *errorOut = nil;
+    NSManagedObjectContext *context = _managedObjectContext;
+    
+    if (context == nil) {
+        completion(NO, nil, errorOut);
+        return;
+    }
+    
+    __block BOOL result = NO;
+    __weak typeof(self) weakSelf = self;
+    [context performBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
+        NSError *errorOut = nil;
+        result = [strongSelf block_alterItemWithEntityName:OCKEntityNameActivity
+                                                identifier:activity.identifier
+                                                   opBlock:^BOOL(NSManagedObject *cdObject, NSManagedObjectContext *context) {
+                                                       OCKCDCarePlanActivity *cdActivity = (OCKCDCarePlanActivity *)cdObject;
+                                                       cdActivity.userInfo = userInfo;
+                                                       return YES;
+                                                   } error:&errorOut];
+        OCKCarePlanActivity *modifiedActivity;
+        if (result) {
+            _cachedActivities = nil;
+            modifiedActivity = [strongSelf block_fetchItemWithEntityName:OCKEntityNameActivity
+                                                              identifier:activity.identifier
+                                                                   class:[OCKCarePlanActivity class]
+                                                                   error:&errorOut];
+        }
+        dispatch_async(_queue, ^{
+            completion(result, modifiedActivity, errorOut);
+            [self handleActivityListChange:result type:activity.type];
+        });
+    }];
+}
+
 - (void)eventsOnDate:(NSDateComponents *)date
                type:(OCKCarePlanActivityType)type
          completion:(void (^)(NSArray<NSArray<OCKCarePlanEvent *> *> *eventsGroupedByActivity, NSError *error))completion {
