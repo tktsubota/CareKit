@@ -167,6 +167,18 @@ You can use the watch delegate to subscribe a watch app to notifications of chan
         completion:(void (^)(BOOL success, OCKCarePlanActivity * _Nullable activity, NSError * _Nullable error))completion;
 
 /**
+ Update the user info of an activity.
+ Use this method to change the user info of an activity after it has been added to store.
+ 
+ @param     userInfo        User info for an activity.
+ @param     activity        Activity object to receive new user info.
+ @param     completion      A completion block that returns the result of the operation and the activity that was modified.
+ */
+- (void)setUserInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo
+        forActivity:(OCKCarePlanActivity *)activity
+         completion:(void (^)(BOOL success, OCKCarePlanActivity * _Nullable activity, NSError * _Nullable error))completion;
+
+/**
  Remove an activity from this store.
  All the events related to the activity will also be removed.
  
