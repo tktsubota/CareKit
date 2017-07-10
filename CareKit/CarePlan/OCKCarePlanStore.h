@@ -174,9 +174,9 @@ You can use the watch delegate to subscribe a watch app to notifications of chan
  @param     activity        Activity object to receive new user info.
  @param     completion      A completion block that returns the result of the operation and the activity that was modified.
  */
-- (void)setUserInfo:(NSDictionary<NSString *, id<NSCoding>> *)userInfo
+- (void)setUserInfo:(nullable NSDictionary<NSString *, id<NSCoding>> *)userInfo
         forActivity:(OCKCarePlanActivity *)activity
-         completion:(void (^)(BOOL success, OCKCarePlanActivity *activity, NSError *error))completion;
+         completion:(void (^)(BOOL success, OCKCarePlanActivity * _Nullable activity, NSError * _Nullable error))completion;
 
 /**
  Remove an activity from this store.
