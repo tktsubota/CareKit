@@ -816,6 +816,15 @@ static NSString * const OCKAttributeNameDayIndex = @"numberOfDaysSinceStart";
                           endDate:(NSDateComponents *)endDate
                           handler:(void (^)(OCKCarePlanEvent * _Nullable event, BOOL *stop))handler
                        completion:(void (^)(BOOL completed, NSError * _Nullable error))completion {
+    [self enumerateEventsOfActivity:activity startDate:startDate endDate:endDate reversed:NO handler:handler completion:completion];
+}
+
+- (void)enumerateEventsOfActivity:(OCKCarePlanActivity *)activity
+                        startDate:(NSDateComponents *)startDate
+                          endDate:(NSDateComponents *)endDate
+                         reversed:(BOOL)reversed
+                          handler:(void (^)(OCKCarePlanEvent * _Nullable event, BOOL *stop))handler
+                       completion:(void (^)(BOOL completed, NSError * _Nullable error))completion {
     
     OCKThrowInvalidArgumentExceptionIfNil(activity);
     OCKThrowInvalidArgumentExceptionIfNil(startDate);
@@ -848,9 +857,9 @@ static NSString * const OCKAttributeNameDayIndex = @"numberOfDaysSinceStart";
                 }
             }
             
-            day = [day nextDay];
+            day = reversed ? [day previousDay] : [day nextDay];
             
-            if ((stop == NO && ([day isEarlierThan:endDate] || [day isEqualToDate:endDate]))) {
+            if (stop == NO && ((!reversed && ([day isEarlierThan:endDate] || [day isEqualToDate:endDate])) || (reversed && ([day isLaterThan:startDate] || [day isEqualToDate:startDate])))) {
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 [strongSelf eventsForActivity:activity date:day completion:completion2];
             } else {

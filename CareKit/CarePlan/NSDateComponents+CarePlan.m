@@ -181,6 +181,10 @@
     return [[NSDateComponents alloc] initWithDateComponents:nextDayComp];
 }
 
+- (NSDateComponents *)previousDay {
+    return [self dateCompByAddingDays:-1];
+}
+
 - (NSDateComponents *)nextDay {
     return [self dateCompByAddingDays:1];
 }

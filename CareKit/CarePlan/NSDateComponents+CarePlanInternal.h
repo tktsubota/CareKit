@@ -42,6 +42,8 @@
 
 - (NSDate *)UTC_dateWithGregorianCalendar;
 
+- (NSDateComponents *)previousDay;
+
 - (NSDateComponents *)nextDay;
 
 - (NSDateComponents *)dateCompByAddingDays:(NSInteger)days;

@@ -259,6 +259,23 @@ Get all the `OCKCarePlanEvent` objects for a given date.
                           handler:(void (^)(OCKCarePlanEvent * _Nullable event, BOOL *stop))handler
                        completion:(void (^)(BOOL completed, NSError * _Nullable error))completion;
 
+/**
+ Enumerate through all the events associated with an OCKCarePlanActivity object within a specified date range.
+ 
+ @param     activity        The activity to which the events belong.
+ @param     startDate       Start date of the date range.
+ @param     endDate         End date of the date range.
+ @param     reversed        Set to YES to begin enumerating from the endDate
+ @param     handler         A completion block that returns each event object.
+ @param     completion      A completion block that reports the end of the enumeration.
+ */
+- (void)enumerateEventsOfActivity:(OCKCarePlanActivity *)activity
+                        startDate:(NSDateComponents *)startDate
+                          endDate:(NSDateComponents *)endDate
+                         reversed:(BOOL)reversed
+                          handler:(void (^)(OCKCarePlanEvent * _Nullable event, BOOL *stop))handler
+                       completion:(void (^)(BOOL completed, NSError * _Nullable error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
