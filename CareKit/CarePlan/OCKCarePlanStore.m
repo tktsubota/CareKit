@@ -840,7 +840,7 @@ static NSString * const OCKAttributeNameDayIndex = @"numberOfDaysSinceStart";
         });
         return;
     }
-    __block NSDateComponents *day = startDate;
+    __block NSDateComponents *day = reversed ? endDate : startDate;
     __block BOOL stop = NO;
     __weak typeof(self) weakSelf = self;
     
